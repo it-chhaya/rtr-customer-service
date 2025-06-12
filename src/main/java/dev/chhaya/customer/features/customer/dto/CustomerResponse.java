@@ -1,12 +1,12 @@
-package dev.chhaya.customer;
+package dev.chhaya.customer.features.customer.dto;
 
 import lombok.Builder;
 
 @Builder
 public record CustomerResponse(
-        String customerId,
+        String customerNumber,
         String firstName,
         String lastName,
-        String kyc
+        String email
 ) {
 }
