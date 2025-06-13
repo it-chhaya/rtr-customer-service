@@ -1,10 +1,10 @@
 package dev.chhaya.customer.features.customer;
 
+import dev.chhaya.customer.features.customer.dto.CreateCustomerRequest;
 import dev.chhaya.customer.features.customer.dto.CustomerResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -14,6 +14,13 @@ import java.util.List;
 public class CustomerController {
 
     private final CustomerService customerServiceImpl;
+
+
+    @PostMapping
+    public CustomerResponse createCustomer(@RequestBody @Valid CreateCustomerRequest createCustomerRequest) {
+        return customerServiceImpl.createCustomer(createCustomerRequest);
+    }
+
 
     @GetMapping("/public")
     public List<CustomerResponse> getCustomerPublic() {

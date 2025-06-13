@@ -5,12 +5,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
-public class CustomerServiceV2Impl implements CustomerService{
-
-    @Override
-    public List<CustomerResponse> getCustomers() {
-        return List.of();
-    }
-
-}
+//@Service
+//public class CustomerServiceV2Impl implements CustomerService{
+//
+//    @Override
+//    public List<CustomerResponse> getCustomers() {
+//        return List.of();
+//    }
+//
+//}
