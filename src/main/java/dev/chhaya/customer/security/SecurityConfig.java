@@ -53,7 +53,6 @@ public class SecurityConfig {
         Converter<Jwt, Collection<GrantedAuthority>> jwtGrantedAuthoritiesConverter = jwt -> {
 
             Map<String, Collection<String>> realmAccess = jwt.getClaim("realm_access");
-
             Collection<String> roles = realmAccess.get("roles");
 
             return roles.stream()
@@ -63,7 +62,6 @@ public class SecurityConfig {
 
         var jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
-
         return jwtAuthenticationConverter;
     }
 

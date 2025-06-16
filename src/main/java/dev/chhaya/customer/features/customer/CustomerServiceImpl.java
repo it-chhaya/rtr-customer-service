@@ -3,6 +3,7 @@ package dev.chhaya.customer.features.customer;
 import dev.chhaya.customer.domain.Customer;
 import dev.chhaya.customer.features.customer.dto.CreateCustomerRequest;
 import dev.chhaya.customer.features.customer.dto.CustomerResponse;
+import dev.chhaya.customer.mapper.CustomerMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
@@ -17,30 +18,20 @@ public class CustomerServiceImpl implements
         CustomerService {
 
     private final CustomerRepository customerRepository;
+    private final CustomerMapper customerMapper;
 
     @Override
     public CustomerResponse createCustomer(CreateCustomerRequest createCustomerRequest) {
 
-        Customer customer = new Customer();
+        Customer customer = customerMapper.toCustomer(createCustomerRequest);
         customer.setCustomerNumber(UUID.randomUUID().toString());
-        customer.setFirstName(createCustomerRequest.firstName());
-        customer.setLastName(createCustomerRequest.lastName());
-        customer.setEmail(createCustomerRequest.email());
-        customer.setPhoneNumber(createCustomerRequest.phoneNumber());
-        customer.setDateOfBirth(createCustomerRequest.dateOfBirth());
         customer.setCreatedAt(LocalDateTime.now());
         customer.setUpdatedAt(LocalDateTime.now());
 
         // Insert into database
         customer = customerRepository.save(customer);
 
-        return CustomerResponse
-                .builder()
-                .customerNumber(customer.getCustomerNumber())
-                .firstName(customer.getFirstName())
-                .lastName(customer.getLastName())
-                .email(customer.getEmail())
-                .build();
+        return customerMapper.fromCustomer(customer);
     }
 
     @Override
