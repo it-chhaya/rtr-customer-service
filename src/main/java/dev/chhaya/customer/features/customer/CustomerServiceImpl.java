@@ -41,13 +41,7 @@ public class CustomerServiceImpl implements
 
         return customers
                 .stream()
-                .map(customer -> CustomerResponse
-                        .builder()
-                        .customerNumber(customer.getCustomerNumber())
-                        .firstName(customer.getFirstName())
-                        .lastName(customer.getLastName())
-                        .email(customer.getEmail())
-                        .build())
+                .map(customerMapper::fromCustomer)
                 .toList();
     }
 
