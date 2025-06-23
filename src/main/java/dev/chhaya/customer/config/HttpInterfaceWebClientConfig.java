@@ -1,5 +1,6 @@
 package dev.chhaya.customer.config;
 
+import dev.chhaya.customer.client.JsonPlaceholderClient;
 import dev.chhaya.customer.client.PlatziFakeStoreClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +25,22 @@ public class HttpInterfaceWebClientConfig {
                 .build();
 
         return factory.createClient(PlatziFakeStoreClient.class);
+    }
+
+    @Bean
+    public JsonPlaceholderClient jsonPlaceholderClient() {
+
+        // Step 1 => Create web client object
+        WebClient webClient = WebClient.builder()
+                .baseUrl("https://jsonplaceholder.typicode.com")
+                .build();
+
+        // Step 2 => Create http proxy factory
+        HttpServiceProxyFactory factory = HttpServiceProxyFactory.builder()
+                .exchangeAdapter(WebClientAdapter.create(webClient))
+                .build();
+
+        return factory.createClient(JsonPlaceholderClient.class);
     }
 
 }
