@@ -2,6 +2,8 @@ package dev.chhaya.customer.config;
 
 import dev.chhaya.customer.client.JsonPlaceholderClient;
 import dev.chhaya.customer.client.PlatziFakeStoreClient;
+import dev.chhaya.customer.util.HttpInterfaceWebClient;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -10,39 +12,27 @@ import org.springframework.web.reactive.function.client.support.WebClientAdapter
 import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 
 @Configuration
+@RequiredArgsConstructor
 public class HttpInterfaceWebClientConfig {
+
+    private final HttpInterfaceWebClient httpInterfaceWebClient;
 
     @Bean
     public PlatziFakeStoreClient platziFakeStoreClient() {
-
-        // Step 1 => Create web client object
-        WebClient webClient = WebClient.builder()
-                .baseUrl("https://api.escuelajs.co/api/v1")
-                .build();
-
-        // Step 2 => Create http proxy factory
-        HttpServiceProxyFactory factory = HttpServiceProxyFactory.builder()
-                .exchangeAdapter(WebClientAdapter.create(webClient))
-                .build();
-
-        return factory.createClient(PlatziFakeStoreClient.class);
+        return httpInterfaceWebClient
+                .createClient(
+                        "https://api.escuelajs.co/api/v1",
+                        PlatziFakeStoreClient.class
+                );
     }
 
     @Bean
     public JsonPlaceholderClient jsonPlaceholderClient() {
-
-        // Step 1 => Create web client object
-        WebClient webClient = WebClient.builder()
-                .baseUrl("https://jsonplaceholder.typicode.com")
-                .build();
-
-
-        // Step 2 => Create http proxy factory
-        HttpServiceProxyFactory factory = HttpServiceProxyFactory.builder()
-                .exchangeAdapter(WebClientAdapter.create(webClient))
-                .build();
-
-        return factory.createClient(JsonPlaceholderClient.class);
+        return httpInterfaceWebClient
+                .createClient(
+                        "https://jsonplaceholder.typicode.com",
+                        JsonPlaceholderClient.class
+                );
     }
 
 }
