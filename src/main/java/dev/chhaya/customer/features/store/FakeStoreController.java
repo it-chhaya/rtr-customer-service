@@ -2,7 +2,9 @@ package dev.chhaya.customer.features.store;
 
 import dev.chhaya.customer.client.PlatziFakeStoreClient;
 import dev.chhaya.customer.client.dto.CategoryResponse;
+import dev.chhaya.customer.client.dto.CreateProductRequest;
 import dev.chhaya.customer.client.dto.ProductResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,11 @@ import java.util.Map;
 public class FakeStoreController {
 
     private final PlatziFakeStoreClient platziFakeStoreClient;
+
+    @PostMapping("/products")
+    public ProductResponse createProduct(@Valid @RequestBody CreateProductRequest createProductRequest) {
+        return platziFakeStoreClient.createProduct(createProductRequest);
+    }
 
     @GetMapping("/products")
     public List<ProductResponse> getProducts(
