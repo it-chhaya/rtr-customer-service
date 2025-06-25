@@ -4,6 +4,7 @@ import dev.chhaya.customer.client.JsonPlaceholderClient;
 import dev.chhaya.customer.client.PlatziFakeStoreClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.support.WebClientAdapter;
 import org.springframework.web.service.invoker.HttpServiceProxyFactory;
@@ -34,6 +35,7 @@ public class HttpInterfaceWebClientConfig {
         WebClient webClient = WebClient.builder()
                 .baseUrl("https://jsonplaceholder.typicode.com")
                 .build();
+
 
         // Step 2 => Create http proxy factory
         HttpServiceProxyFactory factory = HttpServiceProxyFactory.builder()
