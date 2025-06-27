@@ -1,0 +1,41 @@
+package dev.chhaya.customer.exception;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+@RestControllerAdvice
+public class ValidationException {
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public RestError handleValidation(MethodArgumentNotValidException e) {
+
+        List<Map<String, String>> fieldErrors = e.getFieldErrors()
+                .stream()
+                .map(fieldError -> {
+                    var error = new HashMap<String, String>();
+                    error.put("field", fieldError.getField());
+                    error.put("message", fieldError.getDefaultMessage());
+                    return error;
+                })
+                .collect(Collectors.toList());
+
+        RestError restError = RestError.builder()
+                .title("Validation is errored")
+                .description(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .timestamp(LocalDateTime.now())
+                .fieldErrors(fieldErrors)
+                .build();
+
+        return restError;
+    }
+
+}
