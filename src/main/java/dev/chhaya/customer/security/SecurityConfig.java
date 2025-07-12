@@ -31,7 +31,7 @@ public class SecurityConfig {
                 endpoints
                         .requestMatchers("/api/customers/public",
                                 "/api/stores/**",
-                                "/api/mock/**").permitAll()
+                                "/api/mock/**", "/secrets/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/customers").hasRole("ADMIN")
                         .anyRequest().authenticated()
         );
