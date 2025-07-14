@@ -30,8 +30,10 @@ public class SecurityConfig {
         http.authorizeHttpRequests(endpoints ->
                 endpoints
                         .requestMatchers("/api/customers/public",
+                                "/actuator/**",
                                 "/api/stores/**",
-                                "/api/mock/**", "/secrets/**").permitAll()
+                                "/api/mock/**",
+                                "/secrets/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/customers").hasRole("ADMIN")
                         .anyRequest().authenticated()
         );
