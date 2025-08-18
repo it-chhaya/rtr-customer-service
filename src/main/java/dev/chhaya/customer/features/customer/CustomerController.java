@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/customers")
+@RequestMapping("/api/v1/customers")
 @RequiredArgsConstructor
 public class CustomerController {
 
@@ -21,15 +21,9 @@ public class CustomerController {
         return customerServiceImpl.createCustomer(createCustomerRequest);
     }
 
-
-    @GetMapping("/public")
-    public List<CustomerResponse> getCustomerPublic() {
+    @GetMapping
+    public List<CustomerResponse> getCustomers() {
         return customerServiceImpl.getCustomers();
-    }
-
-    @GetMapping("/private")
-    public CustomerResponse getCustomerPrivate() {
-        return null;
     }
 
 }
