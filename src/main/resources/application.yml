@@ -1,3 +1,8 @@
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${server.port}
+    prefer-ip-address: true
+    #hostname: localhost
 spring:
   application:
     name: customer
@@ -10,7 +15,7 @@ spring:
       username: admin
       password: admin@123
   rabbitmq:
-    host: localhost
+    host: 34.87.180.247
     username: admin
     password: password
     port: 5672
