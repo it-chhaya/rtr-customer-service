@@ -29,10 +29,10 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(endpoints ->
                 endpoints
-                        .requestMatchers("/api/customers/public",
-                                "/actuator/**",
+                        .requestMatchers("/actuator/**",
                                 "/api/stores/**",
                                 "/api/mock/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/customers/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/customers").hasRole("ADMIN")
                         .anyRequest().authenticated()
         );

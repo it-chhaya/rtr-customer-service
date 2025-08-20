@@ -6,6 +6,8 @@ import dev.chhaya.customer.features.customer.dto.CustomerResponse;
 import dev.chhaya.customer.mapper.CustomerMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
