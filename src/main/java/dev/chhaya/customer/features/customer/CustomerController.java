@@ -4,6 +4,7 @@ import dev.chhaya.customer.features.customer.dto.CreateCustomerRequest;
 import dev.chhaya.customer.features.customer.dto.CustomerResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -18,18 +19,35 @@ public class CustomerController {
 
     private final CustomerService customerServiceImpl;
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public CustomerResponse createCustomer(@RequestBody @Valid CreateCustomerRequest createCustomerRequest) {
         return customerServiceImpl.createCustomer(createCustomerRequest);
     }
+
 
     @GetMapping
     public List<CustomerResponse> getCustomers() {
         return customerServiceImpl.getCustomers();
     }
 
+
     @GetMapping("/{customerNo}")
     public CustomerResponse getCustomerByNo(@PathVariable String customerNo) {
         return customerServiceImpl.getCustomerByNo(customerNo);
+    }
+
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{customerNo}")
+    public void deleteCustomerByNo(@PathVariable String customerNo) {
+        customerServiceImpl.deleteCustomerByNo(customerNo);
+    }
+
+
+    @PutMapping("/{customerNo}")
+    public CustomerResponse updateCustomerByNo(@PathVariable String customerNo,
+                                               @RequestBody CreateCustomerRequest createCustomerRequest) {
+        return customerServiceImpl.updateCustomerByNo(customerNo, createCustomerRequest);
     }
 }

@@ -7,6 +7,7 @@ import java.util.Optional;
 
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
+    // SELECT * FROM customers WHERE customerNumber = ?1
     Optional<Customer> findByCustomerNumber(String customerNumber);
 
 }

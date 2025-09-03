@@ -60,4 +60,26 @@ public class CustomerServiceImpl implements
         return customerMapper.fromCustomer(customer);
     }
 
+    @Override
+    public void deleteCustomerByNo(String customerNo) {
+        Customer customer = customerRepository
+                .findByCustomerNumber(customerNo)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        customerRepository.delete(customer);
+    }
+
+    @Override
+    public CustomerResponse updateCustomerByNo(String customerNo, CreateCustomerRequest createCustomerRequest) {
+
+        Customer customer = customerRepository
+                .findByCustomerNumber(customerNo)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        customerMapper.toCustomerPartially(createCustomerRequest, customer);
+        customer.setUpdatedAt(LocalDateTime.now());
+
+        customer = customerRepository.save(customer);
+
+        return customerMapper.fromCustomer(customer);
+    }
 }

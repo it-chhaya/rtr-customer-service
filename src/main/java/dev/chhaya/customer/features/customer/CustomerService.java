@@ -13,4 +13,8 @@ public interface CustomerService {
 
     CustomerResponse getCustomerByNo(String customerNo);
 
+    void deleteCustomerByNo(String customerNo);
+
+    CustomerResponse updateCustomerByNo(String customerNo, CreateCustomerRequest createCustomerRequest);
+
 }
