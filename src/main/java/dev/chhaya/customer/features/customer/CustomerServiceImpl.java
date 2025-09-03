@@ -51,4 +51,13 @@ public class CustomerServiceImpl implements
                 .map(customerMapper::fromCustomer)
                 .toList();
     }
+
+    @Override
+    public CustomerResponse getCustomerByNo(String customerNo) {
+        Customer customer = customerRepository
+                .findByCustomerNumber(customerNo)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return customerMapper.fromCustomer(customer);
+    }
+
 }

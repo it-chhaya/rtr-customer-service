@@ -27,4 +27,9 @@ public class CustomerController {
     public List<CustomerResponse> getCustomers() {
         return customerServiceImpl.getCustomers();
     }
+
+    @GetMapping("/{customerNo}")
+    public CustomerResponse getCustomerByNo(@PathVariable String customerNo) {
+        return customerServiceImpl.getCustomerByNo(customerNo);
+    }
 }

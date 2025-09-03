@@ -11,6 +11,6 @@ public interface CustomerService {
 
     List<CustomerResponse> getCustomers();
 
-    //List<CustomerResponse> getCustomersByProvider(String providerId);
+    CustomerResponse getCustomerByNo(String customerNo);
 
 }
