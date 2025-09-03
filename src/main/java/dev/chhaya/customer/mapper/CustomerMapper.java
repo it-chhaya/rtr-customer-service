@@ -15,6 +15,7 @@ public interface CustomerMapper {
     Customer toCustomer(CreateCustomerRequest dto);
 
     @Mapping(source = "customerNumber", target = "customerNo")
+    @Mapping(source = "customerSegment.name", target = "segment")
     CustomerResponse fromCustomer(Customer customer);
 
 }

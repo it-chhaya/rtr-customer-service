@@ -18,7 +18,6 @@ public class CustomerController {
 
     private final CustomerService customerServiceImpl;
 
-
     @PostMapping
     public CustomerResponse createCustomer(@RequestBody @Valid CreateCustomerRequest createCustomerRequest) {
         return customerServiceImpl.createCustomer(createCustomerRequest);
@@ -28,5 +27,4 @@ public class CustomerController {
     public List<CustomerResponse> getCustomers() {
         return customerServiceImpl.getCustomers();
     }
-
 }

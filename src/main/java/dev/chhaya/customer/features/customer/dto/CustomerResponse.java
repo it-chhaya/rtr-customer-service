@@ -7,6 +7,7 @@ public record CustomerResponse(
         String customerNo,
         String firstName,
         String lastName,
-        String email
+        String email,
+        String segment
 ) {
 }

@@ -6,9 +6,12 @@ import dev.chhaya.customer.features.customer.dto.CustomerResponse;
 import dev.chhaya.customer.mapper.CustomerMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,6 +24,7 @@ public class CustomerServiceImpl implements
 
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
+
 
     @Override
     public CustomerResponse createCustomer(CreateCustomerRequest createCustomerRequest) {
@@ -39,12 +43,12 @@ public class CustomerServiceImpl implements
     @Override
     public List<CustomerResponse> getCustomers() {
 
-        List<Customer> customers = customerRepository.findAll();
+        Sort sort = Sort.by(Sort.Direction.DESC, "id", "createdAt");
+        List<Customer> customers = customerRepository.findAll(sort);
 
         return customers
                 .stream()
                 .map(customerMapper::fromCustomer)
                 .toList();
     }
-
 }
