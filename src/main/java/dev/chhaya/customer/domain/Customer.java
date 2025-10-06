@@ -8,6 +8,7 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -32,8 +33,6 @@ public class Customer {
     @Column(unique = true)
     private String email;
 
-    private String phoneNumber;
-
     private LocalDate dateOfBirth;
 
     @Column(precision = 15, scale = 2)
@@ -43,9 +42,24 @@ public class Customer {
     private LocalDateTime createdAt;
 
     @Column(nullable = false)
+    private String createdBy;
+
     private LocalDateTime updatedAt;
+
+    private String updatedBy;
+
+    private String status;
 
     @ManyToOne
     private CustomerSegment customerSegment;
+
+    @OneToMany(mappedBy = "customer")
+    private List<Address> addresses;
+
+    @OneToMany(mappedBy = "customer")
+    private List<Contact>  contacts;
+
+    @OneToMany(mappedBy = "customer")
+    private List<Kyc> kyc;
 
 }

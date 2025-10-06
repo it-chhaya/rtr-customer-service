@@ -24,6 +24,8 @@ public class CustomerSegment {
     @Column(unique = true, nullable = true)
     private String name;
 
+    private String status;
+
     @OneToMany(mappedBy = "customerSegment")
     private List<Customer> customers;
 
