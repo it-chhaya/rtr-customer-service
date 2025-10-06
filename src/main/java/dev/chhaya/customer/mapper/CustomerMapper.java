@@ -3,10 +3,13 @@ package dev.chhaya.customer.mapper;
 import dev.chhaya.customer.domain.Customer;
 import dev.chhaya.customer.features.customer.dto.CreateCustomerRequest;
 import dev.chhaya.customer.features.customer.dto.CustomerResponse;
+import dev.chhaya.customer.features.customer.dto.CustomerSyncDto;
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
 public interface CustomerMapper {
+
+    Customer toCustomer(CustomerSyncDto  customerSyncDto);
 
     // Mapping logic
     // DTOs to Domain Models

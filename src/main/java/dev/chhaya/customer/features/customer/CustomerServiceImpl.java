@@ -3,6 +3,7 @@ package dev.chhaya.customer.features.customer;
 import dev.chhaya.customer.domain.Customer;
 import dev.chhaya.customer.features.customer.dto.CreateCustomerRequest;
 import dev.chhaya.customer.features.customer.dto.CustomerResponse;
+import dev.chhaya.customer.features.customer.dto.CustomerSyncDto;
 import dev.chhaya.customer.mapper.CustomerMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -24,6 +25,12 @@ public class CustomerServiceImpl implements
 
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
+
+    @Override
+    public void syncCustomer(CustomerSyncDto customerSyncDto) {
+        Customer customer = customerMapper.toCustomer(customerSyncDto);
+        customerRepository.save(customer);
+    }
 
 
     @Override

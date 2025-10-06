@@ -2,10 +2,13 @@ package dev.chhaya.customer.features.customer;
 
 import dev.chhaya.customer.features.customer.dto.CreateCustomerRequest;
 import dev.chhaya.customer.features.customer.dto.CustomerResponse;
+import dev.chhaya.customer.features.customer.dto.CustomerSyncDto;
 
 import java.util.List;
 
 public interface CustomerService {
+
+    void syncCustomer(CustomerSyncDto customerSyncDto);
 
     CustomerResponse createCustomer(CreateCustomerRequest createCustomerRequest);
 

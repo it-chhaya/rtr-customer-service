@@ -2,6 +2,7 @@ package dev.chhaya.customer.features.customer;
 
 import dev.chhaya.customer.features.customer.dto.CreateCustomerRequest;
 import dev.chhaya.customer.features.customer.dto.CustomerResponse;
+import dev.chhaya.customer.features.customer.dto.CustomerSyncDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,13 @@ import java.util.List;
 public class CustomerController {
 
     private final CustomerService customerServiceImpl;
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/sync")
+    public void syncCustomer(@RequestBody CustomerSyncDto customerSyncDto) {
+        customerServiceImpl.syncCustomer(customerSyncDto);
+    }
+
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
