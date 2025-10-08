@@ -6,9 +6,6 @@ import dev.chhaya.customer.features.customer.dto.CustomerSyncDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +20,7 @@ public class CustomerController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/sync")
     public void syncCustomer(@RequestBody CustomerSyncDto customerSyncDto) {
+        System.out.println("customerSyncDto = " + customerSyncDto);
         customerServiceImpl.syncCustomer(customerSyncDto);
     }
 

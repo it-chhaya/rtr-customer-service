@@ -18,7 +18,7 @@ import java.util.List;
 public class Customer {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, unique = true)
@@ -38,10 +38,8 @@ public class Customer {
     @Column(precision = 15, scale = 2)
     private BigDecimal profitability = BigDecimal.ZERO;
 
-    @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(nullable = false)
     private String createdBy;
 
     private LocalDateTime updatedAt;
@@ -53,13 +51,13 @@ public class Customer {
     @ManyToOne
     private CustomerSegment customerSegment;
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<Address> addresses;
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<Contact>  contacts;
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<Kyc> kyc;
 
 }

@@ -1,16 +1,14 @@
 package dev.chhaya.customer.features.customer;
 
 import dev.chhaya.customer.domain.Customer;
+import dev.chhaya.customer.domain.CustomerSegment;
 import dev.chhaya.customer.features.customer.dto.CreateCustomerRequest;
 import dev.chhaya.customer.features.customer.dto.CustomerResponse;
 import dev.chhaya.customer.features.customer.dto.CustomerSyncDto;
 import dev.chhaya.customer.mapper.CustomerMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -28,7 +26,21 @@ public class CustomerServiceImpl implements
 
     @Override
     public void syncCustomer(CustomerSyncDto customerSyncDto) {
+
         Customer customer = customerMapper.toCustomer(customerSyncDto);
+
+        customer.getAddresses()
+                .forEach(address -> address.setCustomer(customer));
+
+        customer.getContacts()
+                .forEach(contact -> contact.setCustomer(customer));
+
+        customer.getKyc()
+                .forEach(kyc -> kyc.setCustomer(customer));
+
+        CustomerSegment customerSegment = cust
+        customer.setCustomerSegment();
+
         customerRepository.save(customer);
     }
 

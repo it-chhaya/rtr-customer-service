@@ -9,6 +9,8 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring")
 public interface CustomerMapper {
 
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     Customer toCustomer(CustomerSyncDto  customerSyncDto);
 
     // Mapping logic
