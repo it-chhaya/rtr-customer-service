@@ -20,6 +20,8 @@ public class CustomerSyncDto {
 
     private String lastName;
 
+    private Long dateOfBirth;
+
     private String email;
 
     private String segmentId;

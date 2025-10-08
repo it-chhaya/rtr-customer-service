@@ -11,6 +11,7 @@ public interface CustomerMapper {
 
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "dateOfBirth", ignore = true)
     Customer toCustomer(CustomerSyncDto  customerSyncDto);
 
     // Mapping logic

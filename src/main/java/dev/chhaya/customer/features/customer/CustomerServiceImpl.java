@@ -5,6 +5,7 @@ import dev.chhaya.customer.domain.CustomerSegment;
 import dev.chhaya.customer.features.customer.dto.CreateCustomerRequest;
 import dev.chhaya.customer.features.customer.dto.CustomerResponse;
 import dev.chhaya.customer.features.customer.dto.CustomerSyncDto;
+import dev.chhaya.customer.features.segment.CustomerSegmentRepository;
 import dev.chhaya.customer.mapper.CustomerMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -21,25 +22,27 @@ import java.util.UUID;
 public class CustomerServiceImpl implements
         CustomerService {
 
+    private final CustomerSegmentRepository customerSegmentRepository;
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
 
     @Override
     public void syncCustomer(CustomerSyncDto customerSyncDto) {
-
         Customer customer = customerMapper.toCustomer(customerSyncDto);
 
         customer.getAddresses()
                 .forEach(address -> address.setCustomer(customer));
 
         customer.getContacts()
-                .forEach(contact -> contact.setCustomer(customer));
+                        .forEach(contact -> contact.setCustomer(customer));
 
         customer.getKyc()
-                .forEach(kyc -> kyc.setCustomer(customer));
+                        .forEach(kyc -> kyc.setCustomer(customer));
 
-        CustomerSegment customerSegment = cust
-        customer.setCustomerSegment();
+        CustomerSegment customerSegment =
+                customerSegmentRepository.findById(Integer.parseInt(customerSyncDto.getSegmentId()))
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer segment is invalid"));
+        customer.setCustomerSegment(customerSegment);
 
         customerRepository.save(customer);
     }
