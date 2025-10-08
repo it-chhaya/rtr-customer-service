@@ -30,14 +30,9 @@ public class CustomerServiceImpl implements
     public void syncCustomer(CustomerSyncDto customerSyncDto) {
         Customer customer = customerMapper.toCustomer(customerSyncDto);
 
-        customer.getAddresses()
-                .forEach(address -> address.setCustomer(customer));
-
-        customer.getContacts()
-                        .forEach(contact -> contact.setCustomer(customer));
-
-        customer.getKyc()
-                        .forEach(kyc -> kyc.setCustomer(customer));
+        customer.getAddresses().forEach(address -> address.setCustomer(customer));
+        customer.getContacts().forEach(contact -> contact.setCustomer(customer));
+        customer.getKyc().forEach(kyc -> kyc.setCustomer(customer));
 
         CustomerSegment customerSegment =
                 customerSegmentRepository.findById(Integer.parseInt(customerSyncDto.getSegmentId()))
