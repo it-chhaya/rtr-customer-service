@@ -7,6 +7,7 @@ import dev.chhaya.customer.features.customer.dto.CustomerResponse;
 import dev.chhaya.customer.features.customer.dto.CustomerSyncDto;
 import dev.chhaya.customer.features.segment.CustomerSegmentRepository;
 import dev.chhaya.customer.mapper.CustomerMapper;
+import dev.chhaya.customer.util.DateTimeUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -38,6 +39,10 @@ public class CustomerServiceImpl implements
                 customerSegmentRepository.findById(Integer.parseInt(customerSyncDto.getSegmentId()))
                                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer segment is invalid"));
         customer.setCustomerSegment(customerSegment);
+
+        customer.setDateOfBirth(DateTimeUtil.toLocalDate(customerSyncDto.getDateOfBirth()));
+        customer.setCreatedAt(DateTimeUtil.toLocalDateTime(customerSyncDto.getCreatedAt()));
+        customer.setUpdatedAt(DateTimeUtil.toLocalDateTime(customerSyncDto.getUpdatedAt()));
 
         customerRepository.save(customer);
     }
