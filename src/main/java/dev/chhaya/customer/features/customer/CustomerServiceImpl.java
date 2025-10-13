@@ -28,21 +28,47 @@ public class CustomerServiceImpl implements
     private final CustomerMapper customerMapper;
 
     @Override
+    public void deletedById(Long id) {
+        Customer customer = customerRepository
+                .findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found"));
+        customerRepository.delete(customer);
+
+    }
+
+
+    @Override
     public void syncCustomer(CustomerSyncDto customerSyncDto) {
         Customer customer = customerMapper.toCustomer(customerSyncDto);
 
-        customer.getAddresses().forEach(address -> address.setCustomer(customer));
-        customer.getContacts().forEach(contact -> contact.setCustomer(customer));
-        customer.getKyc().forEach(kyc -> kyc.setCustomer(customer));
+        if (customer.getAddresses() != null) {
+            customer.getAddresses().forEach(address -> address.setCustomer(customer));
+        }
+
+        if (customer.getContacts() != null) {
+            customer.getContacts().forEach(contact -> contact.setCustomer(customer));
+        }
+
+        if (customer.getKyc() != null) {
+            customer.getKyc().forEach(kyc -> kyc.setCustomer(customer));
+        }
 
         CustomerSegment customerSegment =
                 customerSegmentRepository.findById(Integer.parseInt(customerSyncDto.getSegmentId()))
                                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer segment is invalid"));
         customer.setCustomerSegment(customerSegment);
 
-        customer.setDateOfBirth(DateTimeUtil.toLocalDate(customerSyncDto.getDateOfBirth()));
-        customer.setCreatedAt(DateTimeUtil.toLocalDateTime(customerSyncDto.getCreatedAt()));
-        customer.setUpdatedAt(DateTimeUtil.toLocalDateTime(customerSyncDto.getUpdatedAt()));
+        if (customerSyncDto.getDateOfBirth() != null) {
+            customer.setDateOfBirth(DateTimeUtil.toLocalDate(customerSyncDto.getDateOfBirth()));
+        }
+
+        if (customerSyncDto.getCreatedAt() != null) {
+            customer.setCreatedAt(DateTimeUtil.toLocalDateTime(customerSyncDto.getCreatedAt()));
+        }
+
+        if (customerSyncDto.getUpdatedAt() != null) {
+            customer.setUpdatedAt(DateTimeUtil.toLocalDateTime(customerSyncDto.getUpdatedAt()));
+        }
 
         customerRepository.save(customer);
     }
