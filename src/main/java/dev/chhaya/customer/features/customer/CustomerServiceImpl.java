@@ -2,9 +2,12 @@ package dev.chhaya.customer.features.customer;
 
 import dev.chhaya.customer.domain.Customer;
 import dev.chhaya.customer.domain.CustomerSegment;
+import dev.chhaya.customer.features.address.AddressRepository;
+import dev.chhaya.customer.features.contact.ContactRepository;
 import dev.chhaya.customer.features.customer.dto.CreateCustomerRequest;
 import dev.chhaya.customer.features.customer.dto.CustomerResponse;
 import dev.chhaya.customer.features.customer.dto.CustomerSyncDto;
+import dev.chhaya.customer.features.kyc.KycRepository;
 import dev.chhaya.customer.features.segment.CustomerSegmentRepository;
 import dev.chhaya.customer.mapper.CustomerMapper;
 import dev.chhaya.customer.util.DateTimeUtil;
@@ -25,7 +28,50 @@ public class CustomerServiceImpl implements
 
     private final CustomerSegmentRepository customerSegmentRepository;
     private final CustomerRepository customerRepository;
+    private final AddressRepository addressRepository;
+    private final ContactRepository contactRepository;
+    private final KycRepository kycRepository;
     private final CustomerMapper customerMapper;
+
+    @Override
+    public void syncUpdateCustomer(CustomerSyncDto customerSyncDto) {
+
+        Customer customer = customerRepository
+                .findById(Long.valueOf(customerSyncDto.getId()))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found"));
+
+        CustomerSegment customerSegment =
+                customerSegmentRepository.findById(Integer.parseInt(customerSyncDto.getSegmentId()))
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer segment is invalid"));
+        customer.setCustomerSegment(customerSegment);
+
+        if (customerSyncDto.getDateOfBirth() != null) {
+            customer.setDateOfBirth(DateTimeUtil.toLocalDate(customerSyncDto.getDateOfBirth()));
+        }
+
+        if (customerSyncDto.getUpdatedAt() != null) {
+            customer.setUpdatedAt(DateTimeUtil.toLocalDateTime(customerSyncDto.getUpdatedAt()));
+        }
+
+        if (customerSyncDto.getAddresses() != null) {
+            addressRepository.deleteByCustomer(customer);
+            customer.getAddresses().forEach(address -> address.setCustomer(customer));
+        }
+
+        if (customer.getContacts() != null) {
+            contactRepository.deleteByCustomer(customer);
+            customer.getContacts().forEach(contact -> contact.setCustomer(customer));
+        }
+
+        if (customer.getKyc() != null) {
+            kycRepository.deleteByCustomer(customer);
+            customer.getKyc().forEach(kyc -> kyc.setCustomer(customer));
+        }
+
+        customerRepository.save(customer);
+
+    }
+
 
     @Override
     public void deletedById(Long id) {

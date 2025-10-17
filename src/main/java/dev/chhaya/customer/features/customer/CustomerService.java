@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface CustomerService {
 
+    void syncUpdateCustomer(CustomerSyncDto customerSyncDto);
+
     void deletedById(Long id);
 
     void syncCustomer(CustomerSyncDto customerSyncDto);

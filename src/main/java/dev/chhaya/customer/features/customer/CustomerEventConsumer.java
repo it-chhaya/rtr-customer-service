@@ -28,7 +28,7 @@ public class CustomerEventConsumer {
     public void consumeCustomerUpdatedEvent(ConsumerRecord<String, Object> record) throws JsonProcessingException {
         CustomerSyncDto customerSyncDto = objectMapper
                 .readValue(record.value().toString(), CustomerSyncDto.class);
-        customerService.syncCustomer(customerSyncDto);
+        customerService.syncUpdateCustomer(customerSyncDto);
     }
 
     @KafkaListener(topics = "customerCreatedEventTopic",
