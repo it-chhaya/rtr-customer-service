@@ -12,6 +12,16 @@ public interface CustomerMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "dateOfBirth", ignore = true)
+    @Mapping(target = "addresses", ignore = true)
+    @Mapping(target = "contacts", ignore = true)
+    @Mapping(target = "kyc", ignore = true)
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE )
+    void toCustomerPartially(CustomerSyncDto dto,
+                             @MappingTarget Customer domain);
+
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "dateOfBirth", ignore = true)
     Customer toCustomer(CustomerSyncDto  customerSyncDto);
 
     // Mapping logic

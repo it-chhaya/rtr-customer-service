@@ -1,7 +1,6 @@
 package dev.chhaya.customer.features.customer;
 
-import dev.chhaya.customer.domain.Customer;
-import dev.chhaya.customer.domain.CustomerSegment;
+import dev.chhaya.customer.domain.*;
 import dev.chhaya.customer.features.address.AddressRepository;
 import dev.chhaya.customer.features.contact.ContactRepository;
 import dev.chhaya.customer.features.customer.dto.CreateCustomerRequest;
@@ -9,15 +8,20 @@ import dev.chhaya.customer.features.customer.dto.CustomerResponse;
 import dev.chhaya.customer.features.customer.dto.CustomerSyncDto;
 import dev.chhaya.customer.features.kyc.KycRepository;
 import dev.chhaya.customer.features.segment.CustomerSegmentRepository;
+import dev.chhaya.customer.mapper.AddressMapper;
+import dev.chhaya.customer.mapper.ContactMapper;
 import dev.chhaya.customer.mapper.CustomerMapper;
+import dev.chhaya.customer.mapper.KycMapper;
 import dev.chhaya.customer.util.DateTimeUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,13 +36,21 @@ public class CustomerServiceImpl implements
     private final ContactRepository contactRepository;
     private final KycRepository kycRepository;
     private final CustomerMapper customerMapper;
+    private final AddressMapper addressMapper;
+    private final ContactMapper contactMapper;
+    private final KycMapper kycMapper;
 
+    @Transactional
     @Override
     public void syncUpdateCustomer(CustomerSyncDto customerSyncDto) {
+
+        System.out.println("syncUpdateCustomer" + customerSyncDto.getId());
 
         Customer customer = customerRepository
                 .findById(Long.valueOf(customerSyncDto.getId()))
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found"));
+
+        customerMapper.toCustomerPartially(customerSyncDto, customer);
 
         CustomerSegment customerSegment =
                 customerSegmentRepository.findById(Integer.parseInt(customerSyncDto.getSegmentId()))
@@ -54,22 +66,33 @@ public class CustomerServiceImpl implements
         }
 
         if (customerSyncDto.getAddresses() != null) {
-            addressRepository.deleteByCustomer(customer);
-            customer.getAddresses().forEach(address -> address.setCustomer(customer));
+            addressRepository.deleteAddressByCustomerId(customer.getId());
+            List<Address> addresses = new ArrayList<>();
+            customerSyncDto.getAddresses()
+                    .forEach(addressDto -> addresses
+                            .add(addressMapper.fromAddressDto(customer.getId(), addressDto)));
+            customer.setAddresses(addresses);
         }
 
-        if (customer.getContacts() != null) {
-            contactRepository.deleteByCustomer(customer);
-            customer.getContacts().forEach(contact -> contact.setCustomer(customer));
+        if (customerSyncDto.getContacts() != null) {
+            contactRepository.deleteContactByCustomerId(customer.getId());
+            List<Contact> contacts = new ArrayList<>();
+            customerSyncDto.getContacts()
+                    .forEach(contactDto -> contacts
+                            .add(contactMapper.fromContactDto(customer.getId(), contactDto)));
+            customer.setContacts(contacts);
+        }
+//
+        if (customerSyncDto.getKyc() != null) {
+            kycRepository.deleteKycByCustomerId(customer.getId());
+            List<Kyc> kycs = new ArrayList<>();
+            customerSyncDto.getKyc()
+                    .forEach(kycDto -> kycs.add(kycMapper.fromKycDto(customer.getId(), kycDto)));
+            customer.setKyc(kycs);
         }
 
-        if (customer.getKyc() != null) {
-            kycRepository.deleteByCustomer(customer);
-            customer.getKyc().forEach(kyc -> kyc.setCustomer(customer));
-        }
-
+        System.out.println("Customer before saved: " + customer.getId());
         customerRepository.save(customer);
-
     }
 
 
